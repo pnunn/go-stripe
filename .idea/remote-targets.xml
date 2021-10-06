@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="RemoteTargetsManager">
+    <targets>
+      <target name="pnunn@192.168.44.93:22" type="ssh/sftp">
+        <config>
+          <option name="projectRootOnTarget" value="/home/pnunn/src/gocode/go-stripe" />
+          <option name="serverName" value="pnunn@192.168.44.93:22 key" />
+        </config>
+        <ContributedStateBase type="GoLanguageRuntime">
+          <config>
+            <option name="goPath" value="/usr/local/go" />
+            <option name="goRoot" value="/usr/local/go/bin/go" />
+            <option name="goVersion" value="fish: Expected a command, but instead found a redirection" />
+          </config>
+        </ContributedStateBase>
+      </target>
+    </targets>
+  </component>
+</project>

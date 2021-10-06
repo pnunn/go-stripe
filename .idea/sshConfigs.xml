@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig host="192.168.44.93" id="f1ffd330-821f-4d9a-8805-354b290e3c62" keyPath="\\wsl$\Ubuntu-18.04\home\pnunn\.ssh\id_ed25519" port="22" nameFormat="DESCRIPTIVE" username="pnunn" />
+    </configs>
+  </component>
+</project>
