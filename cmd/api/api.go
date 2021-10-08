@@ -24,10 +24,10 @@ type config struct {
 }
 
 type application struct {
-  config        config
-  infoLog       *log.Logger
-  errorLog      *log.Logger
-  version       string
+  config   config
+  infoLog  *log.Logger
+  errorLog *log.Logger
+  version  string
 }
 
 func (app *application) serve() error {
@@ -63,7 +63,7 @@ func main() {
     config:   cfg,
     infoLog:  infoLog,
     errorLog: errorLog,
-    version: version,
+    version:  version,
   }
 
   err := app.serve()

@@ -11,12 +11,15 @@ func (app *application) routes() http.Handler {
   mux := chi.NewRouter()
 
   mux.Use(cors.Handler(cors.Options{
-    AllowedOrigins:     []string{"https://*", "http://*"},
-    AllowOriginFunc:    nil,
-    AllowedMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-    AllowedHeaders:     []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-    AllowCredentials:   false,
-    MaxAge:             300,
+    //AllowedOrigins: []string{"http://*", "https://*"},
+    AllowedOrigins: []string{"*"},
+    //AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+    AllowedMethods:   []string{"*"},
+    AllowedHeaders:   []string{"Accept", "Accept-Language", "Authorization", "Content-Type", "X-CSRF-Token"},
+    //AllowedHeaders:   []string{"*"},
+    AllowCredentials: true,
+    MaxAge:           300,
+    Debug:            true,
   }))
 
   mux.Post("/api/payment-intent", app.GetPaymentIntent)
