@@ -11,12 +11,9 @@ func (app *application) routes() http.Handler {
   mux := chi.NewRouter()
 
   mux.Use(cors.Handler(cors.Options{
-    //AllowedOrigins: []string{"http://*", "https://*"},
-    AllowedOrigins: []string{"*"},
-    //AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-    AllowedMethods:   []string{"*"},
+    AllowedOrigins: []string{"http://*", "https://*"},
+    AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
     AllowedHeaders:   []string{"Accept", "Accept-Language", "Authorization", "Content-Type", "X-CSRF-Token"},
-    //AllowedHeaders:   []string{"*"},
     AllowCredentials: true,
     MaxAge:           300,
     Debug:            true,

@@ -43,7 +43,7 @@ func (app *application) GetPaymentIntent(w http.ResponseWriter, r *http.Request)
 
   okay := true
 
-  pi, msg, err := card.Change(payload.Currency, amount)
+  pi, msg, err := card.Charge(payload.Currency, amount)
   if err != nil {
     okay = false
   }
