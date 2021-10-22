@@ -26,7 +26,7 @@
     </div>
     <div class="mb-3">
       <label for="cardholder-email" class="form-label">Cardholder Email</label>
-      <input type="email" class="form-control" id="cardholder-email" name="cardholder_email"
+      <input type="email" class="form-control" id="cardholder-email" name="email"
              required="" autocomplete="cardholder-email-new">
     </div>
 
@@ -63,7 +63,8 @@
       const payButton = document.getElementById("pay-button");
       const processing = document.getElementById("processing-payment");
 
-      stripe =  Stripe('pk_test_6oqsofc2sazbHrgCQcfAeiE4')
+      {{/*stripe = Stripe({{.StripPublishableKey}})*/}}
+      stripe = Stripe("pk_test_6oqsofc2sazbHrgCQcfAeiE4")
       function hidePayButton(){
           payButton.classList.add("d-none");
           processing.classList.remove("d-none");
@@ -84,7 +85,7 @@
       function showCardSuccess() {
           cardMessages.classList.remove("alert-danger");
           cardMessages.classList.add("alert-success");
-          cardMessages.classList.add("d-none");
+          cardMessages.classList.remove("d-none");
           cardMessages.innerText = "Transaction successful";
       }
 
@@ -117,7 +118,7 @@
               body: JSON.stringify(payload),
           }
 
-          fetch("http://localhost:4001/api/payment-intent", requestOptions)
+          fetch("{{.API}}/api/payment-intent", requestOptions)
             .then(response => response.text())
             .then(response => {
                 let data;
@@ -136,7 +137,7 @@
                             showCardError(result.error.message);
                             showPayButtons();
                         } else if(result.paymentIntent) {
-                            if (result.paymentIntent.status == "succeeded") {
+                            if (result.paymentIntent.status === "succeeded") {
                                 // we have changed the card
                                 document.getElementById("payment_method").value = result.paymentIntent.payment_method_types[0];
                                 document.getElementById("payment_intent").value = result.paymentIntent.id;
@@ -144,7 +145,7 @@
                                 document.getElementById("payment_currency").value = result.paymentIntent.currency;
                                 processing.classList.add("d-none");
                                 showCardSuccess();
-                                // would submit the form
+                                document.getElementById("charge-form").submit();
                             }
                         }
                     })
