@@ -9,7 +9,7 @@ import (
 	"os"
 	"time"
 
-	"../../internal/drivers"
+	"go-stripe/internal/drivers"
 )
 
 const version = "1.0.0"
