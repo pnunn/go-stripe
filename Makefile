@@ -2,7 +2,7 @@ export STRIPE_SECRET=sk_test_dowTjfu0YyTszRI47qYV0sTa
 export STRIPE_KEY=pk_test_6oqsofc2sazbHrgCQcfAeiE4
 export GOSTRIPE_PORT=4002
 export API_PORT=4001
-export DSN=root@tcp(localhost:3306)/widgets?parseTime=true&tls=false
+export DSN=pnunn:rEdCatH4rRy*2120@tcp(192.168.44.131:3306)/widgets?parseTime=true&tls=false
 
 ## build: builds all binaries
 .PHONY: build
