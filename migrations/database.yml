@@ -1,0 +1,7 @@
+development:
+  dialect: mysql
+  database: widgets
+  user: pnunn
+  password: rEdCatH4rRy*2120
+  host: 192.168.44.131
+  pool: 5
