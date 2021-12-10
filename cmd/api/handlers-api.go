@@ -364,7 +364,7 @@ func (app *application) VirtualTerminalPaymentSucceeded(w http.ResponseWriter, r
 
 	card := cards.Card{
 		Secret: app.config.stripe.secret,
-		Key: app.config.stripe.key,
+		Key:    app.config.stripe.key,
 	}
 
 	pi, err := card.RetrievePaymentIntent(txnData.PaymentIntent)
@@ -384,14 +384,14 @@ func (app *application) VirtualTerminalPaymentSucceeded(w http.ResponseWriter, r
 	txnData.ExpiryYear = int(pm.Card.ExpYear)
 
 	txn := models.Transaction{
-		Amount: txnData.PaymentAmount,
-		Currency: txnData.PaymentCurrency,
-		LastFour: txnData.LastFour,
-		ExpiryMonth: txnData.ExpiryMonth,
-		ExpiryYear: txnData.ExpiryYear,
-		PaymentIntent: txnData.PaymentIntent,
-		PaymentMethod: txnData.PaymentMethod,
-		BankReturnCode: pi.Charges.Data[0].ID,
+		Amount:              txnData.PaymentAmount,
+		Currency:            txnData.PaymentCurrency,
+		LastFour:            txnData.LastFour,
+		ExpiryMonth:         txnData.ExpiryMonth,
+		ExpiryYear:          txnData.ExpiryYear,
+		PaymentIntent:       txnData.PaymentIntent,
+		PaymentMethod:       txnData.PaymentMethod,
+		BankReturnCode:      pi.Charges.Data[0].ID,
 		TransactionStatusID: 2,
 	}
 
@@ -422,5 +422,18 @@ func (app *application) SendPasswordResetEmail(w http.ResponseWriter, r *http.Re
 	data.Link = "http://www.unb.ca"
 
 	// send mail
+	err = app.SendEmail("info@widgets.com", "info@widgets.com", "Password Reset Request", "password-reset", data)
+	if err != nil {
+		app.errorLog.Println(err)
+		app.badRequest(w, r, err)
+		return
+	}
 
+	var resp struct {
+		Error   bool   `json:"error"`
+		Message string `json:"message"`
+	}
+
+	resp.Error = false
+	app.writeJSON(w, http.StatusCreated, resp)
 }

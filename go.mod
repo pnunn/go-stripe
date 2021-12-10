@@ -13,8 +13,10 @@ require (
 
 require (
 	github.com/alexedwards/scs/mysqlstore v0.0.0-20211129174645-2e7312138321 // indirect
+	github.com/bwmarrin/go-alone v0.0.0-20190806015146-742bb55d1631 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
 	github.com/xhit/go-simple-mail/v2 v2.10.0 // indirect
+	golang.org/x/sys v0.0.0-20210615035016-665e8c7367d1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
