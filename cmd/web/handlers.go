@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"go-stripe/internal/urlsigner"
 	"net/http"
 	"strconv"
 	"time"
@@ -259,7 +261,7 @@ func (app *application) ChargeOnce(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) BronzePlan(w http.ResponseWriter, r *http.Request) {
-	widget, err := app.DB.GetWidget(2)  // Hard coded magic number
+	widget, err := app.DB.GetWidget(2) // Hard coded magic number
 	if err != nil {
 		app.errorLog.Println(err)
 		return
@@ -289,7 +291,7 @@ func (app *application) LoginPage(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (app *application) PostLoginPage(w http.ResponseWriter, r * http.Request) {
+func (app *application) PostLoginPage(w http.ResponseWriter, r *http.Request) {
 	app.Session.RenewToken(r.Context())
 
 	err := r.ParseForm()
@@ -322,4 +324,25 @@ func (app *application) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 	if err := app.renderTemplate(w, r, "forgot-password", &templateData{}); err != nil {
 		app.errorLog.Println(err)
 	}
+}
+
+func (app *application) ShowResetPassword(w http.ResponseWriter, r *http.Request) {
+	theURL := r.RequestURI
+	testURL := fmt.Sprintf("%s%s", app.config.frontend, theURL)
+	signer := urlsigner.Signer{
+		Secret: []byte(app.config.secretkey),
+	}
+	valid := signer.VerifyToken(testURL)
+	if !valid {
+		app.errorLog.Println("Invalid url - tampering detected")
+		return
+	}
+
+	data := make(map[string]interface{})
+	data["email"] = r.URL.Query().Get("email")
+
+	if err := app.renderTemplate(w, r, "reset-password", &templateData{Data: data}); err != nil {
+		app.errorLog.Println(err)
+	}
+
 }
