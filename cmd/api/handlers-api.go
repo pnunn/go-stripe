@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"go-stripe/internal/encryption"
 	"go-stripe/internal/urlsigner"
 	"golang.org/x/crypto/bcrypt"
 	"net/http"
@@ -472,7 +473,16 @@ func (app *application) ResetPassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := app.DB.GetUserByEmail(payload.Email)
+	encrytor := encryption.Encryption{
+		Key: []byte(app.config.secretkey),
+	}
+
+	realEmail, err := encrytor.Decrypt(payload.Email)
+	if err != nil {
+		app.badRequest(w, r, err)
+	}
+
+	user, err := app.DB.GetUserByEmail(realEmail)
 	if err != nil {
 		app.badRequest(w, r, err)
 		return

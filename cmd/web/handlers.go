@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"go-stripe/internal/encryption"
 	"go-stripe/internal/urlsigner"
 	"net/http"
 	"strconv"
@@ -327,6 +328,7 @@ func (app *application) ForgotPassword(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) ShowResetPassword(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
 	theURL := r.RequestURI
 	testURL := fmt.Sprintf("%s%s", app.config.frontend, theURL)
 	signer := urlsigner.Signer{
@@ -337,9 +339,25 @@ func (app *application) ShowResetPassword(w http.ResponseWriter, r *http.Request
 		app.errorLog.Println("Invalid url - tampering detected")
 		return
 	}
+	// make sure not expired
+	expired := signer.Expired(testURL, 60)
+	if expired {
+		app.errorLog.Println("Link expired")
+		return
+	}
+
+	encrytor := encryption.Encryption{
+		Key: []byte(app.config.secretkey),
+	}
+
+	encryptedEmail, err := encrytor.Encrypt(email)
+	if err != nil {
+		app.errorLog.Println("Encryption failed")
+		return
+	}
 
 	data := make(map[string]interface{})
-	data["email"] = r.URL.Query().Get("email")
+	data["email"] = encryptedEmail
 
 	if err := app.renderTemplate(w, r, "reset-password", &templateData{Data: data}); err != nil {
 		app.errorLog.Println(err)
