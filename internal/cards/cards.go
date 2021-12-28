@@ -5,6 +5,7 @@ import (
 	"github.com/stripe/stripe-go/v72/customer"
 	"github.com/stripe/stripe-go/v72/paymentintent"
 	"github.com/stripe/stripe-go/v72/paymentmethod"
+	"github.com/stripe/stripe-go/v72/refund"
 	"github.com/stripe/stripe-go/v72/sub"
 )
 
@@ -74,13 +75,13 @@ func (c *Card) RetrievePaymentIntent(id string) (*stripe.PaymentIntent, error) {
 // SubscribeToPlan subscribes a stripe customer to a stripe plan
 func (c *Card) SubscribeToPlan(cust *stripe.Customer, plan, email, last4, cardType string) (*stripe.Subscription, error) {
 	stripeCustomerID := cust.ID
-	items := []*stripe.SubscriptionItemsParams {
+	items := []*stripe.SubscriptionItemsParams{
 		{Plan: stripe.String(plan)},
 	}
 
 	params := &stripe.SubscriptionParams{
 		Customer: stripe.String(stripeCustomerID),
-		Items: items,
+		Items:    items,
 	}
 	params.AddMetadata("last_four", last4)
 	params.AddMetadata("card_type", cardType)
@@ -96,7 +97,7 @@ func (c *Card) CreateCustomer(pm, email string) (*stripe.Customer, string, error
 	stripe.Key = c.Secret
 	customParams := &stripe.CustomerParams{
 		PaymentMethod: stripe.String(pm),
-		Email: stripe.String(email),
+		Email:         stripe.String(email),
 		InvoiceSettings: &stripe.CustomerInvoiceSettingsParams{
 			DefaultPaymentMethod: stripe.String(pm),
 		},
@@ -111,6 +112,23 @@ func (c *Card) CreateCustomer(pm, email string) (*stripe.Customer, string, error
 		return nil, msg, err
 	}
 	return cust, "", nil
+}
+
+func (c *Card) Refund(pi string, amount int) error {
+	stripe.Key = c.Secret
+	amountToRefund := int64(amount)
+
+	refundParams := &stripe.RefundParams{
+		Amount:        &amountToRefund,
+		PaymentIntent: &pi,
+	}
+
+	_, err := refund.New(refundParams)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func cardErrorMessage(code stripe.ErrorCode) string {
