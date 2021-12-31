@@ -33,14 +33,14 @@ build_back:
 
 ## start: starts front and back end
 .PHONY: start
-start: start_front start_back
+start: start_front start_back start_invoice
 
 ## start_front: starts the front end
 .PHONY: start_front
 start_front: build_front
 	@echo "Starting the front end..."
 	##@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe -port=${GOSTRIPE_PORT} -dsn="${DSN}" &
-	@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe -port=${GOSTRIPE_PORT}
+	@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe -port=${GOSTRIPE_PORT} &
 	@echo "Front end running!"
 
 ## start_back: starts the back end
@@ -48,12 +48,12 @@ start_front: build_front
 start_back: build_back
 	@echo "Starting the back end..."
 	##@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe_api -port=${API_PORT}  -dsn="${DSN}" &
-	@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe_api -port=${API_PORT}
+	@env STRIPE_KEY=${STRIPE_KEY} STRIPE_SECRET=${STRIPE_SECRET} ./dist/gostripe_api -port=${API_PORT} &
 	@echo "Back end running!"
 
 ## stop: stops the front and back end
 .PHONY: stop
-stop: stop_front stop_back
+stop: stop_front stop_back stop_invoice
 	@echo "All applications stopped"
 
 ## stop_front: stops the front end
@@ -70,4 +70,23 @@ stop_back:
 	@-pkill -SIGTERM -f "gostripe_api -port=${API_PORT}"
 	@echo "Stopped back end"
 
+## build_invoice: builds the invoice microservice
+.PHONY: build_invoice
+build_invoice:
+	@echo "Building invoice microservice..."
+	@go build -o dist/invoice ./cmd/micro/invoice
+	@echo "Invoice microservice built!"
 
+## start_invoice: starts the invoice microservice
+.PHONY: start_invoice
+start_invoice: build_invoice
+	@echo "Starting the invoice microservice..."
+	@./dist/invoice &
+	@echo "invoice microservice running!"
+
+## stop_invoice: stops the front end
+.PHONY: stop_invoice
+stop_invoice:
+	@echo "Stopping the invoice microservice..."
+	@-pkill -SIGTERM -f "invoice"
+	@echo "Stopped invoice microservice"
