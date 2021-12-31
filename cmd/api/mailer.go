@@ -29,20 +29,20 @@ func (app *application) SendEmail(from, to, subject, tmpl string, data interface
 
 	formattedMessage := tpl.String()
 
-	templateToRender = fmt.Sprintf("templates/%s.plain.tmpl", tmpl)
-	t, err = template.New("email-plain").ParseFS(emailTemplateFS, templateToRender)
-	if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
-		app.errorLog.Println(err)
-		return err
-	}
-
-	if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
-		app.errorLog.Println(err)
-		return err
-	}
-
-	plainMessage := tpl.String()
-	app.infoLog.Println(formattedMessage, plainMessage)
+	//templateToRender = fmt.Sprintf("templates/%s.plain.tmpl", tmpl)
+	//t, err = template.New("email-plain").ParseFS(emailTemplateFS, templateToRender)
+	//if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
+	//	app.errorLog.Println(err)
+	//	return err
+	//}
+	//
+	//if err = t.ExecuteTemplate(&tpl, "body", data); err != nil {
+	//	app.errorLog.Println(err)
+	//	return err
+	//}
+	//
+	//plainMessage := tpl.String()
+	//app.infoLog.Println(formattedMessage, plainMessage)
 
 	// send the mail
 	server := mail.NewSMTPClient()

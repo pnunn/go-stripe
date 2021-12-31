@@ -5,6 +5,7 @@
 *.dll
 *.so
 *.dylib
+invoices/*.pdf
 
 # Test binary, built with `go test -c`
 *.test
